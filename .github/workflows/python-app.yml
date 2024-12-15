@@ -1,39 +1,46 @@
 # 工作流名称
-name: Python application
+name: Python Application CI
 
 # 触发条件，当有代码被推送到 main 分支或者有针对 main 分支的 pull request 时触发
 on:
   push:
-    branches: [main]  # 指定触发工作流的分支
+    branches: [main]
   pull_request:
-    branches: [main]  # 指定触发工作流的分支
+    branches: [main]
 
 # 定义工作流中的工作（jobs）
 jobs:
   build:
     # 指定运行工作的虚拟环境
     runs-on: ubuntu-latest
+
     # 定义构建策略，这里使用矩阵策略来运行不同的 Python 版本
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']  # 定义 Python 版本矩阵
+        python-version: ['3.7', '3.8', '3.9', '3.10']
 
     # 定义工作步骤（steps）
     steps:
       # 第一步：检出代码仓库
       - uses: actions/checkout@v2
-        name: Checkout code  # 为步骤命名，便于识别
+        name: Checkout code
 
       # 第二步：设置 Python 环境
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2  # 使用 actions/setup-python 这个 GitHub Action 来设置 Python 环境
+        uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}  # 使用矩阵变量来指定 Python 版本
+          python-version: ${{ matrix.python-version }}
 
       # 第三步：安装依赖
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip  # 更新 pip 到最新版本
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 第四步：运行测试
+      - name: Run tests
+        run: |
+          python run_tests.py
 
       # 第四步：运行测试
       - name: Run tests
