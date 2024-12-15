@@ -42,7 +42,3 @@ jobs:
         run: |
           python run_tests.py
 
-      # 第四步：运行测试
-      - name: Run tests
-        run: |
-          python run_tests.py  # 运行测试脚本
